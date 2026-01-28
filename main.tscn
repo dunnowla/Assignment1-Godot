@@ -1,0 +1,72 @@
+[gd_scene load_steps=6 format=3 uid="uid://dkr51rcbmgnau"]
+
+[ext_resource type="PackedScene" uid="uid://d2t28q3uvft78" path="res://Player.tscn" id="1_ig7tw"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7dm0k"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_ig7tw"]
+sky_material = SubResource("ProceduralSkyMaterial_7dm0k")
+
+[sub_resource type="Environment" id="Environment_0xm2m"]
+background_mode = 2
+sky = SubResource("Sky_ig7tw")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ig7tw"]
+albedo_color = Color(0, 0, 0, 1)
+
+[node name="Main" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_0xm2m")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 17.7, 0)
+shadow_enabled = true
+
+[node name="Floor" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.10000002, -0.10000001, 0.20000002)
+use_collision = true
+size = Vector3(171.6, 1, 175.90001)
+material = SubResource("StandardMaterial3D_ig7tw")
+
+[node name="Wall" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 5.25)
+use_collision = true
+size = Vector3(1, 4, 11.5)
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="Wall"]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1.5, 0, -1.5, 0)
+operation = 2
+radius = 0.8
+
+[node name="Wall2" type="CSGBox3D" parent="."]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 6.2000003, 2.5, 0.050000094)
+use_collision = true
+size = Vector3(1, 4, 11.5)
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="Wall2"]
+transform = Transform3D(-1.13993885e-07, -0.99999994, -7.955474e-08, 2.5500002, -4.470348e-08, 7.9554724e-08, -1.11464054e-07, -4.371138e-08, 1.8199999, 0.025, -1.1, 0)
+operation = 2
+radius = 0.7
+height = 1.25
+
+[node name="FloatingWall" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4, 2.2, 4.3999996)
+use_collision = true
+size = Vector3(4.2000003, 0.5, 7.9)
+
+[node name="Player" parent="." node_paths=PackedStringArray("cam") instance=ExtResource("1_ig7tw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.700001, 1.4000001, 10.099999)
+cam = NodePath("Camera3D")
+
+[node name="Camera3D" type="Camera3D" parent="Player"]
+transform = Transform3D(0.9992461, 0.038221076, -0.006809804, -0.028700747, 0.8453819, 0.5333908, 0.026143653, -0.5327933, 0.8458415, -0.3000002, 3.2000003, 3.8000026)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.9, 4.5000005, 0)
+use_collision = true
+size = Vector3(2, 0.4, 1)

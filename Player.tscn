@@ -1,0 +1,129 @@
+[gd_scene load_steps=14 format=3 uid="uid://d2t28q3uvft78"]
+
+[ext_resource type="Script" uid="uid://ct3q647cw3nih" path="res://PlayerController.cs" id="1_xhfnw"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_kpjcp"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_xhfnw"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_xhfnw"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_0rwas"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xhfnw"]
+albedo_color = Color(0.3679947, 0.71445227, 0.84158933, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_kpjcp"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kne1u"]
+albedo_color = Color(0.94502395, 0.30932885, 0.6031694, 1)
+
+[sub_resource type="Animation" id="Animation_xhfnw"]
+resource_name = "Crouch"
+markers = [{
+"color": Color(1, 1, 1, 1),
+"name": &"Be at bottonm",
+"time": -0.19999999
+}]
+tracks/0/type = "scale_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PivotPoint/Sprite")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 1, 1, 1, 0.2, 1, 1, 0.5, 1)
+tracks/1/type = "position_3d"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("PivotPoint/Sprite")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0, 1, 0, 0.2, 1, 0, 0.5, 0)
+
+[sub_resource type="Animation" id="Animation_kpjcp"]
+length = 0.001
+tracks/0/type = "scale_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PivotPoint/Sprite")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 1, 1, 1)
+
+[sub_resource type="Animation" id="Animation_kne1u"]
+resource_name = "Jump"
+tracks/0/type = "scale_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PivotPoint/Sprite")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 1, 1, 1, 0.13333334, 1, 1, 0.65, 1, 0.23333333, 1, 1, 1.3, 1, 0.26666668, 1, 1, 1, 1)
+tracks/1/type = "position_3d"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("PivotPoint/Sprite")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0, 1, 0, 0.13333334, 1, 0, 0.655, 0, 0.23333333, 1, 0, 1.3, 0, 0.26666668, 1, 0, 1, 0)
+
+[sub_resource type="Animation" id="Animation_e80uo"]
+resource_name = "Idle"
+length = 5.0
+tracks/0/type = "scale_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PivotPoint/Sprite")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 1, 1, 1, 2.5, 1, 1.1, 0.9, 1.1, 5, 1, 1, 1, 1)
+tracks/1/type = "position_3d"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("PivotPoint/Sprite")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0, 1, 0, 2.5, 1, 0, 0.9, 0, 5, 1, 0, 1, 0)
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_kne1u"]
+_data = {
+&"Crouch": SubResource("Animation_xhfnw"),
+&"Idle": SubResource("Animation_e80uo"),
+&"Jump": SubResource("Animation_kne1u"),
+&"RESET": SubResource("Animation_kpjcp")
+}
+
+[node name="Player" type="CharacterBody3D"]
+script = ExtResource("1_xhfnw")
+
+[node name="TopCol" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("SphereShape3D_kpjcp")
+
+[node name="BotCol" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+shape = SubResource("SphereShape3D_xhfnw")
+
+[node name="CeilingCheck" type="ShapeCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.5, 0, 0, 0, 1, 0, 1.1999999, 0)
+shape = SubResource("CapsuleShape3D_xhfnw")
+
+[node name="PivotPoint" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+
+[node name="Sprite" type="MeshInstance3D" parent="PivotPoint"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9707228, 0)
+mesh = SubResource("CapsuleMesh_0rwas")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_xhfnw")
+
+[node name="Face" type="MeshInstance3D" parent="PivotPoint/Sprite"]
+transform = Transform3D(0.72, 0, 0, 0, 0.21000001, 0, 0, 0, 0.55, 0, 0.42000002, -0.33)
+mesh = SubResource("BoxMesh_kpjcp")
+skeleton = NodePath("../../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_kne1u")
+
+[node name="Animations" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_kne1u")
+}

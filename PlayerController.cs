@@ -2,6 +2,7 @@ using Godot;
 using System;
 using System.Diagnostics;
 using System.IO.Pipes;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Transactions;
 
@@ -10,7 +11,7 @@ public partial class PlayerController : CharacterBody3D
 	#region serialized variables
 	[Export]public float speed = 10f;
 	private float startSpeed;
-	[Export]public float jumpHeight = 7f;
+	[Export]public float jumpHeight = 8f;
 	[Export]bool isJumping = false;
 	[Export]public float jumpDelay = 0.2f;
 	[Export]private float delayTimer;
@@ -20,6 +21,10 @@ public partial class PlayerController : CharacterBody3D
 	[Export]bool accMode1 = true;
 	[Export]bool accMode2 = false;
 	[Export]bool accMode3 = false;
+
+	[Export] float gravityMulti = 5;
+	float customGravity = 0;
+	float hoverTimer = 0;
 
 	[Export] public Camera3D cam;
 	#endregion
@@ -161,17 +166,30 @@ public partial class PlayerController : CharacterBody3D
 	void Jump(double delta)
 	{
 		Vector3 velocity = Velocity;
-		float customGravity = GetGravity().Y;
+		customGravity = GetGravity().Y;
 		// Adds gravity in air
 	
 		if(!IsOnFloor())
 		{
-			if(!Input.IsActionPressed("jump")){ customGravity *=2;}
+			hoverTimer += (float)delta;
+			if(hoverTimer < 0.3f && Input.IsActionPressed("jump"))
+			{
+				customGravity = GetGravity().Y;
+			}
+			else if(hoverTimer > 0.3f && hoverTimer < 1f && Input.IsActionPressed("jump"))
+			{
+				customGravity = customGravity / 2;
+			}
+			else if ( hoverTimer > 1f && Input.IsActionPressed("jump"))
+			{
+				customGravity *= gravityMulti;
+			}
+			if(!Input.IsActionPressed("jump")){ customGravity *= gravityMulti;}
 			velocity.Y +=  customGravity * (float)delta;
 			coyoteTimer -= (float)delta;
 			idleTimer = 0;
 		}
-		if(IsOnFloor()){coyoteTimer = coyoteTime;}
+		if(IsOnFloor()){coyoteTimer = coyoteTime; hoverTimer = 0;}
 		// Makes the player jump, also holy if statement
 		if (Input.IsActionJustPressed("jump") && IsOnFloor() ||
 		Input.IsActionJustPressed("jump") && !IsOnFloor() && coyoteTimer > 0 && isJumping == false)

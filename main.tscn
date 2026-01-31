@@ -40,7 +40,7 @@ transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545
 shadow_enabled = true
 
 [node name="Floor" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.10000002, -0.10000001, 0.20000002)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.09999999, -0.40000004, 0.20000002)
 use_collision = true
 size = Vector3(171.6, 1, 175.90001)
 material = SubResource("StandardMaterial3D_ig7tw")
@@ -64,12 +64,12 @@ use_collision = true
 size = Vector3(0.90000004, 0.5, 7.9)
 material = SubResource("StandardMaterial3D_1bvp3")
 
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.9992461, 0.038221054, -0.006809809, -0.028700735, 0.845382, 0.5333907, 0.026143642, -0.53279316, 0.8458416, 9.400001, 9.800001, 13.900002)
+
 [node name="Player" parent="." node_paths=PackedStringArray("cam") instance=ExtResource("1_ig7tw")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.700001, 1.4000001, 10.099999)
-cam = NodePath("Camera3D")
-
-[node name="Camera3D" type="Camera3D" parent="Player"]
-transform = Transform3D(0.9992462, 0.03822106, -0.006809808, -0.028700737, 0.845382, 0.5333908, 0.026143644, -0.53279316, 0.8458415, -0.3000002, 3.2000003, 3.800002)
+cam = NodePath("../Camera3D")
 
 [node name="CSGBox3D2" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.5, 0.8660254, 0, -0.8660254, 0.5, 12.95, 1.7606001, 4.2752566)

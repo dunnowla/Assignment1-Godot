@@ -10,10 +10,7 @@ ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
 sky_material = SubResource("ProceduralSkyMaterial_7dm0k")
 
 [sub_resource type="Environment" id="Environment_0xm2m"]
-background_mode = 2
 sky = SubResource("Sky_ig7tw")
-tonemap_mode = 2
-glow_enabled = true
 glow_intensity = 0.95
 glow_strength = 0.47
 glow_bloom = 1.0
@@ -22,8 +19,6 @@ fog_light_color = Color(0.16078432, 0.13725491, 0.21568628, 1)
 fog_light_energy = 1.52
 fog_sun_scatter = 0.19
 fog_density = 0.0208
-fog_aerial_perspective = 0.065
-volumetric_fog_enabled = true
 volumetric_fog_albedo = Color(0.23529412, 0.13333334, 0.23529412, 1)
 volumetric_fog_emission = Color(0.809403, 0.5599597, 0.7554419, 1)
 volumetric_fog_emission_energy = 0.6
@@ -33,13 +28,10 @@ volumetric_fog_length = 130.06
 volumetric_fog_detail_spread = 2.1213214
 volumetric_fog_ambient_inject = 1.61
 volumetric_fog_temporal_reprojection_amount = 0.658
-adjustment_enabled = true
 adjustment_contrast = 2.63
 adjustment_saturation = 1.35
 
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_ig7tw"]
-exposure_multiplier = 1.266
-dof_blur_far_enabled = true
 dof_blur_far_distance = 89.9
 dof_blur_near_distance = 139.63
 
@@ -78,16 +70,7 @@ compositor = SubResource("Compositor_0xm2m")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.82306725, -0.5088103, 0.25233427, 0.24541606, 0.082046, 0.9659399, -0.5121831, 0.85696024, 0.05734085, 0, 34.1, -0.7)
-light_color = Color(0.52853656, 0.56717205, 1, 1)
-light_energy = 1.66
-light_volumetric_fog_energy = 6.608
-light_angular_distance = 8.35
-light_specular = 0.0
 shadow_enabled = true
-shadow_normal_bias = 1.126
-shadow_opacity = 0.45
-shadow_blur = 0.583
-directional_shadow_fade_start = 1.0
 
 [node name="Floor" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.10000002, -0.10000001, 0.20000002)

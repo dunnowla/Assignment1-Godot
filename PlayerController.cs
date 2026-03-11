@@ -2,6 +2,8 @@ using Godot;
 using System;
 using System.Diagnostics;
 using System.IO.Pipes;
+//using System.Numerics;
+using System.Reflection.Metadata.Ecma335;
 using System.Security.Cryptography;
 using System.Transactions;
 
@@ -25,6 +27,8 @@ public partial class PlayerController : CharacterBody3D
 	[Export]public float coyoteTime = 0.15f;
 	[Export]private float coyoteTimer;
 	[Export] public float gravityMulti = 5f;
+	[Export] public float hangTime = 1.5f;
+	[Export] public float hangTimeGrav = 0.3f;
 	private float customGravity = 0f;
 
 	//Crouching
@@ -83,7 +87,17 @@ public partial class PlayerController : CharacterBody3D
 		Vector3 velocity = Velocity;
 		float xMove = Input.GetAxis("moveLeft","moveRight");
 		float zMove = Input.GetAxis("moveUp","moveDown");
-		Vector3 norm = new Vector3(xMove,0,zMove).Normalized();
+
+		Vector3 camForward = cam.GlobalTransform.Basis.Z;
+		Vector3 camRight = cam.GlobalTransform.Basis.X;
+
+		camForward.Y = 0;
+		camRight.Y = 0;
+
+		camForward = camForward.Normalized();
+		camRight = camRight.Normalized();
+
+		Vector3 norm = (camRight * xMove + camForward * zMove).Normalized();
 		if(norm == Vector3.Zero)
 		{
 			idleTimer += (float)delta;
@@ -147,9 +161,8 @@ public partial class PlayerController : CharacterBody3D
 		{
 			if(xMove != 0 || zMove != 0)
 			{
-				timer += (float)delta;
-				velocity.X = Mathf.Lerp(velocity.X,norm.X*speed,(float)delta*timer/2);
-				velocity.Z = Mathf.Lerp(velocity.Z,norm.Z*speed,(float)delta*timer/2);
+				velocity.X = Mathf.Lerp(velocity.X,norm.X*speed,5* (float)delta);
+				velocity.Z = Mathf.Lerp(velocity.Z,norm.Z*speed,5* (float)delta);
 			}
 			else
 			{
@@ -163,9 +176,7 @@ public partial class PlayerController : CharacterBody3D
 	void Rotate(double delta)
 	{
 		Vector3 velocity = Velocity;
-		float xLook = Input.GetAxis("moveLeft","moveRight");
-		float zLook = Input.GetAxis("moveUp","moveDown");
-		Vector3 norm = new Vector3(xLook,0,zLook); // move direction
+		Vector3 norm = new Vector3(Velocity.X,0,Velocity.Z); // move direction
 		if(norm != Vector3.Zero)
 		{
 			// The target rotation
@@ -183,8 +194,13 @@ public partial class PlayerController : CharacterBody3D
 	
 		if(!IsOnFloor())
 		{
-			if(!Input.IsActionPressed("jump")){ customGravity *= gravityMulti;}
-			velocity.Y +=  customGravity * (float)delta;
+			float currentGrav = 1.0f;
+			if(Mathf.Abs(Velocity.Y) < hangTime)
+			{
+				currentGrav = hangTimeGrav;
+			}
+			else if(!Input.IsActionPressed("jump")){ currentGrav = gravityMulti;}
+			velocity.Y +=  customGravity * currentGrav * (float)delta;
 			coyoteTimer -= (float)delta;
 			idleTimer = 0;
 		}

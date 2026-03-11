@@ -7,30 +7,44 @@ using System.Transactions;
 
 public partial class PlayerController : CharacterBody3D
 {
-	#region serialized variables
+	#region variables
+
+	//Movement
 	[Export]public float speed = 10f;
 	private float startSpeed;
-	[Export]public float jumpHeight = 7f;
+	[Export]bool accMode1 = true;
+	[Export]bool accMode2 = false;
+	[Export]bool accMode3 = false;
+	[Export] float sprintSpeed = 15f;
+
+	//Jumping
+	[Export]public float jumpHeight = 8f;
 	[Export]bool isJumping = false;
 	[Export]public float jumpDelay = 0.2f;
 	[Export]private float delayTimer;
 	[Export]public float coyoteTime = 0.15f;
 	[Export]private float coyoteTimer;
-	[Export]bool isCrouching = false;
-	[Export]bool accMode1 = true;
-	[Export]bool accMode2 = false;
-	[Export]bool accMode3 = false;
+	[Export] public float gravityMulti = 5f;
+	private float customGravity = 0f;
 
+	//Crouching
+	[Export]bool isCrouching = false;
+	private bool isCrouchAnimStarted = false;
+	private ShapeCast3D ceilingCheck;
+
+	//Camera
 	[Export] public Camera3D cam;
-	#endregion
-	private AnimationPlayer anim;
-	private Node3D point;
-	private CollisionShape3D collider;
-    private bool isCrouchAnimStarted = false;
+
+	//Timers
 	float timer = 0;
 	float idleTimer = 0;
 
-	private ShapeCast3D ceilingCheck;
+	//The rest
+	private AnimationPlayer anim;
+	private Node3D point;
+	private CollisionShape3D collider;
+	#endregion
+
     public override void _Ready()
     {
 		startSpeed = speed;
@@ -44,9 +58,13 @@ public partial class PlayerController : CharacterBody3D
 	public override void _PhysicsProcess(double delta)
 	{
 		if(IsOnFloor() && isCrouching)
-			{
-				speed = startSpeed/2;
-			}
+		{
+			speed = startSpeed/2;
+		}
+		else if(Input.IsActionPressed("sprint") && !isCrouching)
+		{
+			speed = sprintSpeed;
+		}
 		else {speed = startSpeed;}
 		if(Input.IsActionPressed("walk")){isCrouching = true;}
 		else if(!ceilingCheck.IsColliding()) {isCrouching = false;}
@@ -54,7 +72,6 @@ public partial class PlayerController : CharacterBody3D
 		{
 			anim.Play("Idle");
 		}
-		//else{isCrouching = false;}
 		Move(delta);
 		Jump(delta);
 		Rotate(delta);
@@ -132,13 +149,13 @@ public partial class PlayerController : CharacterBody3D
 			{
 				timer += (float)delta;
 				velocity.X = Mathf.Lerp(velocity.X,norm.X*speed,(float)delta*timer/2);
-				velocity.Z = Mathf.Lerp(velocity.Z,norm.Z*speed,(float)delta*timer);
+				velocity.Z = Mathf.Lerp(velocity.Z,norm.Z*speed,(float)delta*timer/2);
 			}
 			else
 			{
 				timer = 0;
-				velocity.X = Mathf.MoveToward(velocity.X,0,(float)delta*20);
-				velocity.Z = Mathf.MoveToward(velocity.Z,0,(float)delta*20);
+				velocity.X = Mathf.MoveToward(velocity.X,0,(float)delta*30);
+				velocity.Z = Mathf.MoveToward(velocity.Z,0,(float)delta*30);
 			}
 		}
 		Velocity = velocity;
@@ -161,12 +178,12 @@ public partial class PlayerController : CharacterBody3D
 	void Jump(double delta)
 	{
 		Vector3 velocity = Velocity;
-		float customGravity = GetGravity().Y;
+		customGravity = GetGravity().Y;
 		// Adds gravity in air
 	
 		if(!IsOnFloor())
 		{
-			if(!Input.IsActionPressed("jump")){ customGravity *=2;}
+			if(!Input.IsActionPressed("jump")){ customGravity *= gravityMulti;}
 			velocity.Y +=  customGravity * (float)delta;
 			coyoteTimer -= (float)delta;
 			idleTimer = 0;

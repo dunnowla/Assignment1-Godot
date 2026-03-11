@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://dkr51rcbmgnau"]
+[gd_scene load_steps=15 format=3 uid="uid://dkr51rcbmgnau"]
 
 [ext_resource type="PackedScene" uid="uid://d2t28q3uvft78" path="res://Player.tscn" id="1_ig7tw"]
 
@@ -14,18 +14,80 @@ background_mode = 2
 sky = SubResource("Sky_ig7tw")
 tonemap_mode = 2
 glow_enabled = true
+glow_intensity = 0.95
+glow_strength = 0.47
+glow_bloom = 1.0
+glow_blend_mode = 4
+fog_light_color = Color(0.16078432, 0.13725491, 0.21568628, 1)
+fog_light_energy = 1.52
+fog_sun_scatter = 0.19
+fog_density = 0.0208
+fog_aerial_perspective = 0.065
+volumetric_fog_enabled = true
+volumetric_fog_albedo = Color(0.23529412, 0.13333334, 0.23529412, 1)
+volumetric_fog_emission = Color(0.809403, 0.5599597, 0.7554419, 1)
+volumetric_fog_emission_energy = 0.6
+volumetric_fog_gi_inject = 1.43
+volumetric_fog_anisotropy = 0.9
+volumetric_fog_length = 130.06
+volumetric_fog_detail_spread = 2.1213214
+volumetric_fog_ambient_inject = 1.61
+volumetric_fog_temporal_reprojection_amount = 0.658
+adjustment_enabled = true
+adjustment_contrast = 2.63
+adjustment_saturation = 1.35
+
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_ig7tw"]
+exposure_multiplier = 1.266
+dof_blur_far_enabled = true
+dof_blur_far_distance = 89.9
+dof_blur_near_distance = 139.63
+
+[sub_resource type="Compositor" id="Compositor_0xm2m"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ig7tw"]
 albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0xm2m"]
+albedo_color = Color(0, 0.752741, 0.5264711, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_h2yge"]
+albedo_color = Color(0.043137256, 0.36862746, 0.28235295, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1bvp3"]
+albedo_color = Color(0.31813797, 0.48942965, 0.71304226, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lquwl"]
+albedo_color = Color(0.7830209, 0.37693825, 0.34533054, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7mycd"]
+albedo_color = Color(0.68270427, 0.8606739, 0.8357463, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_272bh"]
+albedo_color = Color(0.6480259, 0.5447924, 0.14299211, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5vw27"]
+albedo_color = Color(0.35012877, 0.1246305, 0.4620515, 1)
 
 [node name="Main" type="Node3D"]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_0xm2m")
+camera_attributes = SubResource("CameraAttributesPractical_ig7tw")
+compositor = SubResource("Compositor_0xm2m")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 17.7, 0)
+transform = Transform3D(-0.82306725, -0.5088103, 0.25233427, 0.24541606, 0.082046, 0.9659399, -0.5121831, 0.85696024, 0.05734085, 0, 34.1, -0.7)
+light_color = Color(0.52853656, 0.56717205, 1, 1)
+light_energy = 1.66
+light_volumetric_fog_energy = 6.608
+light_angular_distance = 8.35
+light_specular = 0.0
 shadow_enabled = true
+shadow_normal_bias = 1.126
+shadow_opacity = 0.45
+shadow_blur = 0.583
+directional_shadow_fade_start = 1.0
 
 [node name="Floor" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.10000002, -0.10000001, 0.20000002)
@@ -33,40 +95,70 @@ use_collision = true
 size = Vector3(171.6, 1, 175.90001)
 material = SubResource("StandardMaterial3D_ig7tw")
 
-[node name="Wall" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 5.25)
-use_collision = true
-size = Vector3(1, 4, 11.5)
-
-[node name="CSGCylinder3D" type="CSGCylinder3D" parent="Wall"]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1.5, 0, -1.5, 0)
-operation = 2
-radius = 0.8
-
-[node name="Wall2" type="CSGBox3D" parent="."]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 6.2000003, 2.5, 0.050000094)
-use_collision = true
-size = Vector3(1, 4, 11.5)
-
-[node name="CSGCylinder3D" type="CSGCylinder3D" parent="Wall2"]
-transform = Transform3D(-1.13993885e-07, -0.99999994, -7.955474e-08, 2.5500002, -4.470348e-08, 7.9554724e-08, -1.11464054e-07, -4.371138e-08, 1.8199999, 0.025, -1.1, 0)
-operation = 2
-radius = 0.7
-height = 1.25
-
-[node name="FloatingWall" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4, 2.2, 4.3999996)
-use_collision = true
-size = Vector3(4.2000003, 0.5, 7.9)
-
 [node name="Player" parent="." node_paths=PackedStringArray("cam") instance=ExtResource("1_ig7tw")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.700001, 1.4000001, 10.099999)
-cam = NodePath("Camera3D")
+cam = NodePath("../Static Cam")
 
-[node name="Camera3D" type="Camera3D" parent="Player"]
-transform = Transform3D(0.9992461, 0.038221076, -0.006809804, -0.028700747, 0.8453819, 0.5333908, 0.026143653, -0.5327933, 0.8458415, -0.3000002, 3.2000003, 3.8000026)
+[node name="PlayerCam" type="Camera3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 0.8660254, 0.5, 0, -0.5, 0.8660254, 0, 2.1999998, 2.7000008)
 
-[node name="CSGBox3D" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.9, 4.5000005, 0)
+[node name="Static Cam" type="Camera3D" parent="."]
+transform = Transform3D(0.9995859, 0.014096346, -0.025087876, 0.011115182, 0.61502004, 0.7884331, 0.026543573, -0.7883854, 0.6146085, -2.1000004, 29.5, 12.600004)
+visible = false
+
+[node name="Node3D" type="Node3D" parent="."]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, -9.7)
+
+[node name="BigBox" type="CSGBox3D" parent="Node3D"]
+transform = Transform3D(7.4505806e-08, 0, 1.0000001, 0, 1, 0, -1.0000001, 0, 7.4505806e-08, 6.3000007, 4.8500004, -6.2000012)
 use_collision = true
-size = Vector3(2, 0.4, 1)
+size = Vector3(13.400001, 8.900001, 11.6)
+material = SubResource("StandardMaterial3D_0xm2m")
+
+[node name="Hole" type="CSGCylinder3D" parent="Node3D/BigBox"]
+transform = Transform3D(4.425645e-07, 1.0000004, -2.4318692e-07, 5.27578e-15, 5.960466e-08, 8.16, 5.9399996, -7.450583e-08, 1.08713045e-14, -0.024999142, -3.65, 2.3000078)
+operation = 2
+height = 13.75
+sides = 18
+material = SubResource("StandardMaterial3D_h2yge")
+
+[node name="SmallerBigBox" type="CSGBox3D" parent="Node3D"]
+transform = Transform3D(-2.9802322e-08, -0.99999994, 0, 0.99999994, -2.9802322e-08, 0, 0, 0, 1, -3.8580396, 2.4349976, -0.8500004)
+use_collision = true
+size = Vector3(4.1, 8.8, 24)
+material = SubResource("StandardMaterial3D_1bvp3")
+
+[node name="Slope" type="CSGBox3D" parent="Node3D"]
+transform = Transform3D(0.5, -0.8660255, 0, 0.8660255, 0.5, 0, 0, 0, 1, 3.86, 1.986, 8.35)
+use_collision = true
+size = Vector3(1, 8.3, 5.5)
+material = SubResource("StandardMaterial3D_lquwl")
+
+[node name="Parkour Step" type="CSGBox3D" parent="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 0.39999998, 0, 0, 0, 5, 0.1500001, 6.3, -10.4)
+use_collision = true
+size = Vector3(2, 1, 1)
+material = SubResource("StandardMaterial3D_7mycd")
+
+[node name="Parkour Step2" type="CSGBox3D" parent="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 0.39999998, 0, 0, 0, 5, 0.1500001, 7.8, -3.5999994)
+use_collision = true
+size = Vector3(2, 1, 1)
+material = SubResource("StandardMaterial3D_7mycd")
+
+[node name="Limbo stick" type="CSGBox3D" parent="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.85, 5.750001, -0.099999994)
+use_collision = true
+size = Vector3(8.7, 0.5, 1.2)
+material = SubResource("StandardMaterial3D_272bh")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Node3D/Limbo stick"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1500001, 2.3000002, 0)
+size = Vector3(8.900001, 4.2000003, 1)
+material = SubResource("StandardMaterial3D_5vw27")
+
+[node name="Limbo stick2" type="CSGBox3D" parent="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.450003, 1.9000003, -5.600001)
+use_collision = true
+size = Vector3(8.7, 0.2, 11.6)
+material = SubResource("StandardMaterial3D_272bh")

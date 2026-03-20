@@ -63,18 +63,18 @@ public partial class PlayerController : CharacterBody3D
 	{
 		if(IsOnFloor() && isCrouching)
 		{
-			speed = startSpeed/2;
+			speed = startSpeed/2; // slows player down if crouching
 		}
 		else if(Input.IsActionPressed("sprint") && !isCrouching)
 		{
-			speed = sprintSpeed;
+			speed = sprintSpeed; // speeds player up if sprinting
 		}
-		else {speed = startSpeed;}
-		if(Input.IsActionPressed("walk")){isCrouching = true;}
-		else if(!ceilingCheck.IsColliding()) {isCrouching = false;}
+		else {speed = startSpeed;} // the normal walking speed
+		if(Input.IsActionPressed("walk")){isCrouching = true;} 
+		else if(!ceilingCheck.IsColliding()) {isCrouching = false;} // stops the crouch if the player has no obstacle over its head
 		if(idleTimer >= 5)
 		{
-			anim.Play("Idle");
+			anim.Play("Idle"); // Plays the idle animation if player dont move for 5 seconds
 		}
 		Move(delta);
 		Jump(delta);
@@ -85,24 +85,29 @@ public partial class PlayerController : CharacterBody3D
 	void Move(double delta)
 	{
 		Vector3 velocity = Velocity;
+		// Gets all the input for moving the player
 		float xMove = Input.GetAxis("moveLeft","moveRight");
 		float zMove = Input.GetAxis("moveUp","moveDown");
 
+		// Gets teh direction we want the player to move in
 		Vector3 camForward = cam.GlobalTransform.Basis.Z;
 		Vector3 camRight = cam.GlobalTransform.Basis.X;
 
+		// Flattens the vectors so the character always moves forward
 		camForward.Y = 0;
 		camRight.Y = 0;
-
+		// Normalizes the vectors to keep the player speed consistent
 		camForward = camForward.Normalized();
 		camRight = camRight.Normalized();
 
+		// Calculates the final direction vector
 		Vector3 norm = (camRight * xMove + camForward * zMove).Normalized();
 		if(norm == Vector3.Zero)
 		{
-			idleTimer += (float)delta;
+			idleTimer += (float)delta; // If the player is standing still it activates the idle timer
 		}
 		else{idleTimer = 0;}
+		// Sets the acceleration mode
 		if(Input.IsKeyPressed(Key.Key1))
 		{
 			accMode1 = true;
@@ -121,6 +126,8 @@ public partial class PlayerController : CharacterBody3D
 			accMode2 = false;
 			accMode3 = true;
 		}
+		// Instant acceleration mode
+		// Sets your speed to the max speed directly
 		if(accMode1)
 		{
 			if(xMove != 0 || zMove != 0)
@@ -134,6 +141,7 @@ public partial class PlayerController : CharacterBody3D
 				velocity.Z = 0;
 			}
 		}
+		// Slow constant Acceleration
 		if(accMode2)
 		{
 			if(xMove != 0 && zMove == 0)
@@ -157,6 +165,7 @@ public partial class PlayerController : CharacterBody3D
 				velocity.Z = Mathf.MoveToward(velocity.Z,0,(float)delta*10);
 			}
 		}
+		// Ease acceleration and constant deceleration
 		if(accMode3)
 		{
 			if(xMove != 0 || zMove != 0)
@@ -191,20 +200,20 @@ public partial class PlayerController : CharacterBody3D
 		Vector3 velocity = Velocity;
 		customGravity = GetGravity().Y;
 		// Adds gravity in air
-	
 		if(!IsOnFloor())
 		{
 			float currentGrav = 1.0f;
+			// If we are at the peak of our jump we hang lower gravity to "hang"
 			if(Mathf.Abs(Velocity.Y) < hangTime)
 			{
 				currentGrav = hangTimeGrav;
 			}
-			else if(!Input.IsActionPressed("jump")){ currentGrav = gravityMulti;}
-			velocity.Y +=  customGravity * currentGrav * (float)delta;
-			coyoteTimer -= (float)delta;
+			else if(!Input.IsActionPressed("jump")){ currentGrav = gravityMulti;} // If we release the jump button the gravity increases
+			velocity.Y +=  customGravity * currentGrav * (float)delta; // calculates the gravity
+			coyoteTimer -= (float)delta; // starts the coyote timer
 			idleTimer = 0;
 		}
-		if(IsOnFloor()){coyoteTimer = coyoteTime;}
+		if(IsOnFloor()){coyoteTimer = coyoteTime;} // resets the coyote times
 		// Makes the player jump, also holy if statement
 		if (Input.IsActionJustPressed("jump") && IsOnFloor() ||
 		Input.IsActionJustPressed("jump") && !IsOnFloor() && coyoteTimer > 0 && isJumping == false)
@@ -216,8 +225,9 @@ public partial class PlayerController : CharacterBody3D
 			delayTimer += (float)delta;
 			if(anim.CurrentAnimation != "Jump")
 			{
-				anim.Play("Jump");
+				anim.Play("Jump"); // Plays the jumping animation
 			}
+			// Makes the player jump if the jump delay is over
 			if(delayTimer >= jumpDelay)
 			{
 				velocity.Y = jumpHeight;
@@ -229,6 +239,7 @@ public partial class PlayerController : CharacterBody3D
 	}
 	void Crouch()
 	{
+		// Plays the crouching animation and pushes the top collider into the bottom one to crouch
 		if(isCrouching)
 		{
 			idleTimer = 0;
@@ -239,6 +250,7 @@ public partial class PlayerController : CharacterBody3D
 				collider.Position = new Vector3(0,-0.5f,0);
 			}
 		}
+		// Stops the crouching animation, resets the collider and resets the players speed
 		else if (!isCrouching)
 		{
 			if(isCrouchAnimStarted)
